@@ -58,7 +58,7 @@ public class StarEvolutionSystem : MonoBehaviour
         else
         {
             resultTitleText.text = "Unknown Result";
-            resultDescriptionText.text = "No matching result was found for this Mass-Time combination.";
+            resultDescriptionText.text = "No matching result found.";
             resultImage.sprite = null;
             resultImage.enabled = false;
         }
