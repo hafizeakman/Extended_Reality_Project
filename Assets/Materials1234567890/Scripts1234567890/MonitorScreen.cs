@@ -6,84 +6,73 @@ public class MonitorScreen : MonoBehaviour
 {
     public GameObject screenRoot;
     public Image screenImage;
-    public TMP_Text screenText;
+    public TMP_Text mainText;
+    public TMP_Text statusText;
 
     public Sprite earthSprite;
     public Sprite blackHoleSprite;
 
-    public string earthText = "Earth";
-    public string blackHoleText = "Black Hole";
-
-    private bool screenOn = false;
-    private bool showingEarth = true;
-
     void Start()
     {
-        UpdateScreen();
+        if (screenRoot != null)
+            screenRoot.SetActive(false);
+
+        if (mainText != null)
+            mainText.text = "";
+
+        if (statusText != null)
+            statusText.text = "";
     }
 
-    public void ToggleScreen()
+    public void TurnScreenOn()
     {
-        if (!screenOn)
-        {
-            screenOn = true;
-        }
-        else
-        {
-            showingEarth = !showingEarth;
-        }
-
-        UpdateScreen();
+        if (screenRoot != null)
+            screenRoot.SetActive(true);
     }
 
-    public void TurnOn()
+    public void TurnScreenOff()
     {
-        screenOn = true;
-        UpdateScreen();
-    }
-
-    public void TurnOff()
-    {
-        screenOn = false;
-        UpdateScreen();
+        if (screenRoot != null)
+            screenRoot.SetActive(false);
     }
 
     public void ShowEarth()
     {
-        screenOn = true;
-        showingEarth = true;
-        UpdateScreen();
+        TurnScreenOn();
+
+        if (screenImage != null)
+        {
+            screenImage.enabled = true;
+            screenImage.sprite = earthSprite;
+        }
+
+        if (mainText != null)
+            mainText.text = "Earth";
     }
 
     public void ShowBlackHole()
     {
-        screenOn = true;
-        showingEarth = false;
-        UpdateScreen();
+        TurnScreenOn();
+
+        if (screenImage != null)
+        {
+            screenImage.enabled = true;
+            screenImage.sprite = blackHoleSprite;
+        }
+
+        if (mainText != null)
+            mainText.text = "Black Hole";
     }
 
-    private void UpdateScreen()
+    public void ShowStatus(string message)
     {
-        if (screenRoot != null)
-            screenRoot.SetActive(screenOn);
+        if (statusText != null)
+            statusText.text = message;
+    }
 
-        if (!screenOn) return;
-
-        if (showingEarth)
-        {
-            if (screenImage != null)
-                screenImage.sprite = earthSprite;
-
-            if (screenText != null)
-                screenText.text = earthText;
-        }
-        else
-        {
-            if (screenImage != null)
-                screenImage.sprite = blackHoleSprite;
-
-            if (screenText != null)
-                screenText.text = blackHoleText;
-        }
+    public void ClearStatus()
+    {
+        if (statusText != null)
+            statusText.text = "";
     }
 }

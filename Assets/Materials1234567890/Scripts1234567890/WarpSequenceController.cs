@@ -42,6 +42,7 @@ public class WarpSequenceController : MonoBehaviour
     private ParticleSystem.MainModule mainModule;
     private ParticleSystem.EmissionModule emissionModule;
     private bool isWarping = false;
+    public bool IsWarping => isWarping;
 
     void Start()
     {
