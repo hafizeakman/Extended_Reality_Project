@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
 public class StarEvolutionSystem : MonoBehaviour
 {
@@ -32,6 +33,13 @@ public class StarEvolutionSystem : MonoBehaviour
     [Header("All 25 Results")]
     public StarResult[] results = new StarResult[25];
 
+    [Header("Black Hole Button Rise")]
+    public Transform risingButton;
+    public float riseAmount = 2f;
+    public float riseSpeed = 2f;
+
+    private bool buttonRaised = false;
+
     public void ShowResult()
     {
         int selectedMass = Mathf.RoundToInt(massSlider.value);
@@ -54,6 +62,13 @@ public class StarEvolutionSystem : MonoBehaviour
                 resultImage.sprite = null;
                 resultImage.enabled = false;
             }
+
+            // Trigger button rise on black hole combo
+            if (selectedMass == 4 && selectedTime == 4 && !buttonRaised)
+            {
+                StartCoroutine(RaiseButton());
+                buttonRaised = true;
+            }
         }
         else
         {
@@ -73,7 +88,25 @@ public class StarEvolutionSystem : MonoBehaviour
                 return result;
             }
         }
-
         return null;
+    }
+
+    private IEnumerator RaiseButton()
+    {
+        Vector3 startPos = risingButton.position;
+        Vector3 targetPos = startPos + Vector3.up * riseAmount;
+
+        while (Vector3.Distance(risingButton.position, targetPos) > 0.01f)
+        {
+            risingButton.position = Vector3.MoveTowards(
+                risingButton.position,
+                targetPos,
+                riseSpeed * Time.deltaTime
+            );
+
+            yield return null;
+        }
+
+        risingButton.position = targetPos;
     }
 }

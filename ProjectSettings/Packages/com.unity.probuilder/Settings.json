@@ -109,22 +109,22 @@
             {
                 "type": "UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
                 "key": "ShapeBuilder.LastSize.Cube",
-                "value": "{\"m_Value\":{\"x\":315.3663330078125,\"y\":85.99641418457031,\"z\":479.123779296875}}"
+                "value": "{\"m_Value\":{\"x\":0.01214599609375,\"y\":2.09912109375,\"z\":-1.991455078125}}"
             },
             {
                 "type": "UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
                 "key": "ShapeBuilder.LastSize.Sphere",
-                "value": "{\"m_Value\":{\"x\":-1.4117431640625,\"y\":0.5525054931640625,\"z\":-0.93896484375}}"
+                "value": "{\"m_Value\":{\"x\":0.996337890625,\"y\":0.1134185791015625,\"z\":1.33935546875}}"
             },
             {
                 "type": "UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
                 "key": "ShapeBuilder.LastSize.Cylinder",
-                "value": "{\"m_Value\":{\"x\":-0.08339309692382813,\"y\":0.145263671875,\"z\":-0.1331787109375}}"
+                "value": "{\"m_Value\":{\"x\":1.26513671875,\"y\":0.3144989013671875,\"z\":-0.9892578125}}"
             },
             {
                 "type": "UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
                 "key": "ShapeBuilder.LastSize.Pipe",
-                "value": "{\"m_Value\":{\"x\":1.5430908203125,\"y\":0.5263786315917969,\"z\":1.72998046875}}"
+                "value": "{\"m_Value\":{\"x\":2.0982666015625,\"y\":0.29228973388671877,\"z\":-2.217529296875}}"
             },
             {
                 "type": "UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
@@ -134,7 +134,7 @@
             {
                 "type": "UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
                 "key": "ShapeBuilder.LastSize.Arch",
-                "value": "{\"m_Value\":{\"x\":-1.7716064453125,\"y\":0.6805038452148438,\"z\":0.67626953125}}"
+                "value": "{\"m_Value\":{\"x\":1.33203125,\"y\":0.6968917846679688,\"z\":0.64697265625}}"
             },
             {
                 "type": "UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
