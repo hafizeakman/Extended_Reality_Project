@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using System.Collections;
 
 public class WarpTravelManager : MonoBehaviour
@@ -26,21 +27,41 @@ public class WarpTravelManager : MonoBehaviour
         public DestinationObject[] objects;
     }
 
+    [Header("Core References")]
     public WarpSequenceController warpSequenceController;
     public MonitorScreen monitorScreen;
 
+    [Header("Destinations")]
     public DestinationDefinition[] destinations;
 
+    [Header("Timing")]
     public float destinationAppearDelay = 1.25f;
     public float warpLockDuration = 3f;
     public float infoMessageDuration = 1.5f;
 
+    [Header("Messages")]
     public string warpingMessage = "Warping...";
     public string noSelectionMessage = "No destination selected";
     public string alreadyThereMessage = "You are already there";
 
+    [Header("Interactables")]
     public Behaviour[] warpButtonInteractables;
     public Behaviour[] monitorToggleButtonInteractables;
+
+    [Header("First Time Earth Movement")]
+    public Transform earthTriggeredObject;
+    public Vector3 earthMoveDirection = Vector3.up;
+    public float earthMoveAmount = 2f;
+    public float earthMoveSpeed = 2f;
+
+    [Header("Travel Audio")]
+    public AudioSource travelAudioSource;
+    public AudioClip introWarpClip;
+    public AudioClip blackHoleWarpClip;
+    public AudioClip earthWarpClip;
+
+    [Header("Extra Trigger Event")]
+    public UnityEvent onWarpStarted;
 
     private DestinationId currentDestination = DestinationId.None;
     private DestinationId selectedDestination = DestinationId.None;
@@ -49,6 +70,7 @@ public class WarpTravelManager : MonoBehaviour
     private bool isWarping = false;
     private bool monitorUnlocked = false;
     private bool monitorScreenOn = false;
+    private bool hasTriggeredEarthMove = false;
 
     private Coroutine messageRoutine;
 
@@ -62,6 +84,7 @@ public class WarpTravelManager : MonoBehaviour
         isWarping = false;
         monitorUnlocked = false;
         monitorScreenOn = false;
+        hasTriggeredEarthMove = false;
 
         if (monitorScreen != null)
         {
@@ -135,6 +158,11 @@ public class WarpTravelManager : MonoBehaviour
         SetWarpButtonInteractable(false);
         SetMonitorToggleButtonInteractable(false);
 
+        PlayTravelAudio(DestinationId.BlackHole, true);
+
+        if (onWarpStarted != null)
+            onWarpStarted.Invoke();
+
         if (monitorScreen != null)
             monitorScreen.ShowStatus(warpingMessage);
 
@@ -156,9 +184,9 @@ public class WarpTravelManager : MonoBehaviour
         if (remainingWait > 0f)
             yield return new WaitForSeconds(remainingWait);
 
+        isWarping = false;
         hasCompletedIntroWarp = true;
         monitorUnlocked = true;
-        isWarping = false;
 
         if (monitorScreen != null)
             monitorScreen.ClearStatus();
@@ -172,6 +200,11 @@ public class WarpTravelManager : MonoBehaviour
         isWarping = true;
         SetWarpButtonInteractable(false);
         SetMonitorToggleButtonInteractable(false);
+
+        PlayTravelAudio(selectedDestination, false);
+
+        if (onWarpStarted != null)
+            onWarpStarted.Invoke();
 
         if (monitorScreen != null)
             monitorScreen.ShowStatus(warpingMessage);
@@ -188,6 +221,14 @@ public class WarpTravelManager : MonoBehaviour
 
         UpdateMonitorPreview(currentDestination);
 
+        if (currentDestination == DestinationId.Earth && !hasTriggeredEarthMove)
+        {
+            hasTriggeredEarthMove = true;
+
+            if (earthTriggeredObject != null)
+                StartCoroutine(MoveEarthTriggeredObject());
+        }
+
         float totalWait = Mathf.Max(warpLockDuration, destinationAppearDelay);
         float remainingWait = totalWait - destinationAppearDelay;
 
@@ -201,6 +242,35 @@ public class WarpTravelManager : MonoBehaviour
 
         SetWarpButtonInteractable(true);
         SetMonitorToggleButtonInteractable(true);
+    }
+
+    private void PlayTravelAudio(DestinationId destinationId, bool isIntroWarp)
+    {
+        if (travelAudioSource == null)
+            return;
+
+        travelAudioSource.Stop();
+
+        if (isIntroWarp)
+        {
+            if (introWarpClip != null)
+                travelAudioSource.PlayOneShot(introWarpClip);
+            else if (blackHoleWarpClip != null)
+                travelAudioSource.PlayOneShot(blackHoleWarpClip);
+
+            return;
+        }
+
+        if (destinationId == DestinationId.BlackHole)
+        {
+            if (blackHoleWarpClip != null)
+                travelAudioSource.PlayOneShot(blackHoleWarpClip);
+        }
+        else if (destinationId == DestinationId.Earth)
+        {
+            if (earthWarpClip != null)
+                travelAudioSource.PlayOneShot(earthWarpClip);
+        }
     }
 
     private void ResetAllDestinations()
@@ -303,5 +373,24 @@ public class WarpTravelManager : MonoBehaviour
             if (monitorToggleButtonInteractables[i] != null)
                 monitorToggleButtonInteractables[i].enabled = value;
         }
+    }
+
+    private IEnumerator MoveEarthTriggeredObject()
+    {
+        Vector3 startPos = earthTriggeredObject.position;
+        Vector3 targetPos = startPos + earthMoveDirection.normalized * earthMoveAmount;
+
+        while (Vector3.Distance(earthTriggeredObject.position, targetPos) > 0.01f)
+        {
+            earthTriggeredObject.position = Vector3.MoveTowards(
+                earthTriggeredObject.position,
+                targetPos,
+                earthMoveSpeed * Time.deltaTime
+            );
+
+            yield return null;
+        }
+
+        earthTriggeredObject.position = targetPos;
     }
 }

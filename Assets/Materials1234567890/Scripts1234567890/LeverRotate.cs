@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Lever : MonoBehaviour
+public class LeverRotate : MonoBehaviour
 {
     [Header("Target")]
     public Transform objectToRotate;
@@ -31,6 +31,7 @@ public class Lever : MonoBehaviour
         {
             time += Time.deltaTime;
             float t = time / rotationDuration;
+
             objectToRotate.rotation = Quaternion.Lerp(startRotation, targetRotation, t);
             yield return null;
         }

@@ -33,12 +33,13 @@ public class StarEvolutionSystem : MonoBehaviour
     [Header("All 25 Results")]
     public StarResult[] results = new StarResult[25];
 
-    [Header("Black Hole Button Rise")]
-    public Transform risingButton;
-    public float riseAmount = 2f;
-    public float riseSpeed = 2f;
+    [Header("Black Hole Button Movement")]
+    public Transform movingObject;
+    public Vector3 moveDirection = Vector3.up;
+    public float moveAmount = 2f;
+    public float moveSpeed = 2f;
 
-    private bool buttonRaised = false;
+    private bool objectMoved = false;
 
     public void ShowResult()
     {
@@ -63,11 +64,10 @@ public class StarEvolutionSystem : MonoBehaviour
                 resultImage.enabled = false;
             }
 
-            // Trigger button rise on black hole combo
-            if (selectedMass == 4 && selectedTime == 4 && !buttonRaised)
+            if (selectedMass == 4 && selectedTime == 4 && !objectMoved)
             {
-                StartCoroutine(RaiseButton());
-                buttonRaised = true;
+                StartCoroutine(MoveObject());
+                objectMoved = true;
             }
         }
         else
@@ -91,22 +91,22 @@ public class StarEvolutionSystem : MonoBehaviour
         return null;
     }
 
-    private IEnumerator RaiseButton()
+    private IEnumerator MoveObject()
     {
-        Vector3 startPos = risingButton.position;
-        Vector3 targetPos = startPos + Vector3.up * riseAmount;
+        Vector3 startPos = movingObject.position;
+        Vector3 targetPos = startPos + moveDirection.normalized * moveAmount;
 
-        while (Vector3.Distance(risingButton.position, targetPos) > 0.01f)
+        while (Vector3.Distance(movingObject.position, targetPos) > 0.01f)
         {
-            risingButton.position = Vector3.MoveTowards(
-                risingButton.position,
+            movingObject.position = Vector3.MoveTowards(
+                movingObject.position,
                 targetPos,
-                riseSpeed * Time.deltaTime
+                moveSpeed * Time.deltaTime
             );
 
             yield return null;
         }
 
-        risingButton.position = targetPos;
+        movingObject.position = targetPos;
     }
 }
