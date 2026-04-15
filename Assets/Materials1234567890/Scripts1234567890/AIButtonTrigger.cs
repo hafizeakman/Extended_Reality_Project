@@ -5,7 +5,6 @@ public class AIButtonTrigger : MonoBehaviour
 {
     [Header("AI")]
     public AIController aiController;
-    public GameObject aiVisualRoot; // drag the AI canvas/object here
     public AIEmotion selectedEmotion = AIEmotion.Neutral;
 
     [Header("Audio")]
@@ -17,23 +16,29 @@ public class AIButtonTrigger : MonoBehaviour
     public bool stopSpeakingAfterAudio = true;
     public float fallbackSpeakDuration = 2f;
 
-    [Header("Popup")]
-    public bool hideOnStart = true;
-    public bool hideAfterFinished = false;
-    public float hideDelay = 0f;
+    [Header("Play On Awake")]
+    public bool playOnAwake = false;
+    public float playDelay = 2f; // 🔥 delay after scene starts
 
     [Header("Safety")]
     public bool triggerOnlyOnce = false;
 
     private bool hasTriggered = false;
     private bool isBusy = false;
+    private Coroutine finishRoutine;
 
-    private void Start()
+    private void Awake()
     {
-        if (hideOnStart && aiVisualRoot != null)
+        if (playOnAwake)
         {
-            aiVisualRoot.SetActive(false);
+            StartCoroutine(DelayedStart());
         }
+    }
+
+    private IEnumerator DelayedStart()
+    {
+        yield return new WaitForSeconds(playDelay);
+        TriggerAI();
     }
 
     public void TriggerAI()
@@ -55,11 +60,6 @@ public class AIButtonTrigger : MonoBehaviour
             return;
         }
 
-        if (aiVisualRoot != null)
-        {
-            aiVisualRoot.SetActive(true);
-        }
-
         aiController.SetEmotion(selectedEmotion);
 
         float duration = fallbackSpeakDuration;
@@ -67,17 +67,23 @@ public class AIButtonTrigger : MonoBehaviour
             duration = audioClip.length;
 
         if (makeCompanionSpeak)
-        {
             aiController.StartSpeaking();
-        }
 
         if (audioSource != null && audioClip != null)
         {
             audioSource.PlayOneShot(audioClip);
         }
+        else if (audioClip != null && audioSource == null)
+        {
+            Debug.LogWarning("AudioSource missing.");
+        }
 
         isBusy = true;
-        StartCoroutine(FinishAfterDelay(duration));
+
+        if (finishRoutine != null)
+            StopCoroutine(finishRoutine);
+
+        finishRoutine = StartCoroutine(FinishAfterDelay(duration));
     }
 
     private IEnumerator FinishAfterDelay(float delay)
@@ -85,18 +91,9 @@ public class AIButtonTrigger : MonoBehaviour
         yield return new WaitForSeconds(delay);
 
         if (aiController != null && stopSpeakingAfterAudio)
-        {
             aiController.StopSpeaking();
-        }
-
-        if (hideAfterFinished && aiVisualRoot != null)
-        {
-            if (hideDelay > 0f)
-                yield return new WaitForSeconds(hideDelay);
-
-            aiVisualRoot.SetActive(false);
-        }
 
         isBusy = false;
+        finishRoutine = null;
     }
 }

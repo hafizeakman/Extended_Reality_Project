@@ -2,21 +2,34 @@ using UnityEngine;
 
 public class ControlPanelZone : MonoBehaviour
 {
-    public JoystickGrab joystickGrab;
+    [Header("Buttons To Enable In Zone")]
+    public GameObject leftButton;
+    public GameObject rightButton;
 
     void Start()
     {
-        joystickGrab.enabled = false;
-        Debug.Log("ControlPanelZone ready - JoystickGrab disabled");
+        if (leftButton != null)
+            leftButton.SetActive(false);
+
+        if (rightButton != null)
+            rightButton.SetActive(false);
+
+        Debug.Log("ControlPanelZone ready - buttons disabled");
     }
 
     void OnTriggerEnter(Collider other)
     {
         Debug.Log("Something entered zone: " + other.gameObject.name);
+
         if (other.CompareTag("Player"))
         {
-            joystickGrab.enabled = true;
-            Debug.Log("Player entered - JoystickGrab enabled");
+            if (leftButton != null)
+                leftButton.SetActive(true);
+
+            if (rightButton != null)
+                rightButton.SetActive(true);
+
+            Debug.Log("Player entered - buttons enabled");
         }
     }
 
@@ -24,8 +37,13 @@ public class ControlPanelZone : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            joystickGrab.enabled = false;
-            Debug.Log("Player exited - JoystickGrab disabled");
+            if (leftButton != null)
+                leftButton.SetActive(false);
+
+            if (rightButton != null)
+                rightButton.SetActive(false);
+
+            Debug.Log("Player exited - buttons disabled");
         }
     }
 }

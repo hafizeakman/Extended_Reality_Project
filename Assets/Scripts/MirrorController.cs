@@ -30,6 +30,9 @@ public class MirrorController : MonoBehaviour
     private AudioSource buzzSource;
     private AudioSource oneShotSource;
     private bool isAligned = false;
+
+    //  NEW: controls continuous rotation
+    private int currentDirection = 0; // -1 = left, 1 = right, 0 = none
     private bool wasMoving = false;
 
     void Start()
@@ -54,37 +57,65 @@ public class MirrorController : MonoBehaviour
         SetStatusText("ERROR: MIRROR NOT ALIGNED", Color.red);
     }
 
-    public void RotateByInput(float input, bool isMoving)
+    void Update()
     {
         if (isAligned) return;
 
-        HandleSqueak(isMoving);
+        // 🔄 Continuous rotation
+        if (currentDirection != 0)
+        {
+            float delta = currentDirection * rotationSpeed * Time.deltaTime;
+            accumulatedAngle += delta;
+            transform.Rotate(Vector3.forward, delta, Space.Self);
 
-        float delta = input * rotationSpeed * Time.deltaTime;
-        accumulatedAngle += delta;
-        transform.Rotate(Vector3.forward, delta, Space.Self);
-
-        CheckAlignment();
+            CheckAlignment();
+        }
     }
 
-    public void RotateLeft(bool isMoving)  => RotateByInput(-1f, isMoving);
-    public void RotateRight(bool isMoving) => RotateByInput( 1f, isMoving);
+    // BUTTON FUNCTIONS
+
+    public void PressLeft()
+    {
+        currentDirection = -1;
+        HandleSqueak(true);
+    }
+
+    public void ReleaseLeft()
+    {
+        currentDirection = 0;
+        HandleSqueak(false);
+    }
+
+    public void PressRight()
+    {
+        currentDirection = 1;
+        HandleSqueak(true);
+    }
+
+    public void ReleaseRight()
+    {
+        currentDirection = 0;
+        HandleSqueak(false);
+    }
 
     void HandleSqueak(bool isMoving)
     {
         if (isMoving && !wasMoving)
-            if (squeakClip != null) oneShotSource.PlayOneShot(squeakClip);
+        {
+            if (squeakClip != null)
+                oneShotSource.PlayOneShot(squeakClip);
+        }
         wasMoving = isMoving;
     }
 
     void CheckAlignment()
     {
         float normalized = accumulatedAngle % 360f;
-        if (normalized > 180f)  normalized -= 360f;
+        if (normalized > 180f) normalized -= 360f;
         if (normalized < -180f) normalized += 360f;
 
         float targetNorm = targetAngle % 360f;
-        if (targetNorm > 180f)  targetNorm -= 360f;
+        if (targetNorm > 180f) targetNorm -= 360f;
         if (targetNorm < -180f) targetNorm += 360f;
 
         float diff = Mathf.Abs(Mathf.DeltaAngle(normalized, targetNorm));
@@ -126,6 +157,7 @@ public class MirrorController : MonoBehaviour
             laserSegment2.SetPosition(1, tubeBDestination.position);
         }
 
-        if (laserShootClip != null) oneShotSource.PlayOneShot(laserShootClip);
+        if (laserShootClip != null)
+            oneShotSource.PlayOneShot(laserShootClip);
     }
 }
