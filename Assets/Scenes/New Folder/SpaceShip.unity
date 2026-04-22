@@ -38495,7 +38495,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::VideoThenRevealButton
   videoPlayer: {fileID: 219529400}
   curtainButtonController: {fileID: 320039821}
-  revealDelay: 186
+  revealDelay: 10
   playOnlyOnce: 1
 --- !u!1 &692514477 stripped
 GameObject:
@@ -83305,23 +83305,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2183877721850430451, guid: 9e1c7dc117a292b4c801677777be91d9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.304
+      value: 1.35
       objectReference: {fileID: 0}
     - target: {fileID: 2183877721850430451, guid: 9e1c7dc117a292b4c801677777be91d9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.15
+      value: 0.054
       objectReference: {fileID: 0}
     - target: {fileID: 2183877721850430451, guid: 9e1c7dc117a292b4c801677777be91d9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 6.849
+      value: 7.051
       objectReference: {fileID: 0}
     - target: {fileID: 2183877721850430451, guid: 9e1c7dc117a292b4c801677777be91d9, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.6972414
       objectReference: {fileID: 0}
     - target: {fileID: 2183877721850430451, guid: 9e1c7dc117a292b4c801677777be91d9, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: -0.71683645
       objectReference: {fileID: 0}
     - target: {fileID: 2183877721850430451, guid: 9e1c7dc117a292b4c801677777be91d9, type: 3}
       propertyPath: m_LocalRotation.y
@@ -83333,7 +83333,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2183877721850430451, guid: 9e1c7dc117a292b4c801677777be91d9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -91.588
       objectReference: {fileID: 0}
     - target: {fileID: 2183877721850430451, guid: 9e1c7dc117a292b4c801677777be91d9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
